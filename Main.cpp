@@ -6,7 +6,7 @@ int main()
 {
 	AArrey<string, double> myAA;
 	
-	
+	cout << "test repos work!"<<endl;
 	myAA.insert("jan", 327.2);
 	myAA.insert("feb", 368.2);
 	myAA.insert("mar", 197.3);
