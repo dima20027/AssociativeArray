@@ -20,6 +20,8 @@ int main()
 	myAA.insert("nov", 73.2);
 	myAA.insert("dec", 110.9);
 	myAA.print();
+
+
 	Iterator<string>* qitK = myAA.createBftIteratorKey();
 	while (qitK->has_next())
 	{
@@ -27,11 +29,20 @@ int main()
 	}
 	myAA.getKeys();
 
-	Iterator<double>* qitD = myAA.createBftIteratorData();
-	while (qitD->has_next())
+	myAA.clear();
+	try
 	{
-		cout << qitD->next() << " ";
+		Iterator<double>* qitD = myAA.createBftIteratorData();
+		while (qitD->has_next())
+		{
+			cout << qitD->next() << " ";
+		}
 	}
+	catch (out_of_range error)
+	{
+		cout << error.what();
+	}
+
 	myAA.getValue();
 
 	
