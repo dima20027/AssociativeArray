@@ -59,7 +59,7 @@ public:
 	{
 		if (contains(key) == true)
 		{
-			throw out_of_range("Error - This key is already in memory!");
+			throw invalid_argument("Error - This key is already in memory!");
 		}
 
 		nodeRBT<TKEY, TDATA>* nwNode = new nodeRBT<TKEY, TDATA>;
@@ -129,6 +129,11 @@ public:
 		
 	}
 
+	void clear()
+	{
+		if (Root != NIL) clearLock(Root);
+		Root = NIL;
+	}
 
 	void getKeys()
 	{
@@ -158,6 +163,16 @@ private:
 	};
 	nodeRBT<TKEY, TDATA>* NIL;
 	nodeRBT<TKEY, TDATA>* Root;
+
+
+	void clearLock(nodeRBT<TKEY,TDATA> *&head)
+	{
+		if (head == NIL) return;
+		clearLock(head->left);
+		clearLock(head->right);
+		delete head;
+		
+	}
 
 
 	//Centered tree walk for data
@@ -501,6 +516,7 @@ public: // for iterators
 	public:
 		bftIteratorKeys(nodeRBT<TKEY,TDATA> *Root2, nodeRBT<TKEY,TDATA>*NIL2)
 		{
+			if (Root2 == NIL2)throw out_of_range("tree is empty!");
 			nil = NIL2;
 			current = new nodeQ<TKEY, TDATA>;
 			current->link = Root2;
@@ -509,7 +525,7 @@ public: // for iterators
 		}
 		TKEY next() override
 		{
-			if (current == nullptr) throw out_of_range("The next element does not exist");
+			if (current == nullptr || current->link == nil) throw out_of_range("The next element does not exist");
 			TKEY data = current->link->key;
 			if (current->link->left != nil)
 			{
@@ -559,6 +575,7 @@ public: // for iterators
 	public:
 		bftIteratorData(nodeRBT<TKEY, TDATA>* Root2, nodeRBT<TKEY, TDATA>* NIL2)
 		{
+			if (Root2 == NIL2)throw out_of_range("tree is empty!");
 			nil = NIL2;
 			current = new nodeQ<TKEY, TDATA>;
 			current->link = Root2;
@@ -567,7 +584,7 @@ public: // for iterators
 		}
 		TDATA next() override
 		{
-			if (current == nullptr) throw out_of_range("The next element does not exist");
+			if (current == nullptr || current->link == nil) throw out_of_range("The next element does not exist");
 			TDATA data = current->link->data;
 			if (current->link->left != nil)
 			{
@@ -627,5 +644,9 @@ AArrey<TKEY,TDATA>::AArrey()
 template<typename TKEY, typename TDATA>
 AArrey<TKEY,TDATA>::~AArrey()
 {
+	if (Root != NIL) {
+		clearLock(Root);
+	}
+	delete NIL;
 }
 
